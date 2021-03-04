@@ -1,0 +1,277 @@
+#Read in bitcoin price daily data
+bcoin <- read_csv("bcoin_price.csv")
+#Rename columns
+bcoin <- bcoin %>% 
+  rename(BTC_price = `BTC / USD Denominated Closing Price`) %>% 
+  rename(Date=Time)
+#Add year, month, day columns
+bcoin<-bcoin %>% 
+  mutate(Year=year(dmy(Date)), Month=month(dmy(Date)), Weekday=wday(dmy(Date)))
+#change date format
+bcoin$Date <- as.Date(bcoin$Date, "%d/%m/%Y")
+#add log returns column
+bcoin<-bcoin %>% 
+  mutate(log_returns =log(BTC_price/lag(BTC_price)))
+#Show the extent of volatility by year
+bcoin %>% 
+  group_by(Year) %>% 
+  summarise(sd(log_returns, na.rm=TRUE))
+#show sd of log returns whole lifetime
+bcoin %>%
+  summarise(sd(log_returns, na.rm=TRUE)) 
+add_bc <- c("Total", 0.0536)
+
+#create table of results of volatility
+tab_bc<-bcoin %>% 
+  group_by(Year) %>% 
+  summarise(format(round(sd(log_returns, na.rm=TRUE), digits=4) ,nsmall=4))
+#rename column in results table
+tab_bc<-tab_bc %>% 
+  rename("Bitcoin" = `format(round(sd(log_returns, na.rm = TRUE), digits = 4), nsmall = 4)`)
+#combine table with the final lifetime value
+TAB_bc<-rbind(tab_bc,add_bc)
+NEW_bc<-rbind(tab_bc,add_bc)
+#nicer format for table
+NEW_nice_tab_bc<-formattable(NEW_bc)
+
+###########
+SP500<- read_csv("S&P500.csv")
+#################
+#Rename columns
+SP500 <- SP500 %>% 
+  rename(Daily_log_returns = `Daily log returns S&P500`)
+#Add year, month, day columns
+SP500<-SP500 %>% 
+  mutate(Year=year(dmy(Date)), Month=month(dmy(Date)), Weekday=wday(dmy(Date)))
+#change date format
+str(SP500)
+SP500$Date <- as.Date(SP500$Date, "%d/%m/%Y")
+#Show the extent of volatility by year
+SP500 %>% 
+  group_by(Year) %>% 
+  summarise(sd(Daily_log_returns, na.rm=TRUE))
+#show sd of log returns whole lifetime
+SP500 %>%
+  summarise(sd(Daily_log_returns, na.rm=TRUE)) 
+add_SP <- c("Total", 0.000480)
+
+#create table of results of volatility
+tab_SP<-SP500 %>% 
+  group_by(Year) %>% 
+  summarise(format(round(sd(Daily_log_returns, na.rm=TRUE), digits=4) ,nsmall=4))
+#rename column in results table
+tab_SP<-tab_SP %>% 
+  rename("S&P 500" =`format(...)`)
+tab_SP <- tab_SP[-13,]
+#combine table with the final lifetime value
+NEW_SP<-rbind(tab_SP,add_SP)
+#nicer format for table
+
+##############
+#Read in Ethereum price daily data
+Eth <- read_csv("ethereum.csv")
+#Rename columns
+Eth <- Eth %>% 
+  rename(eth_price =`ETH / USD Denominated Closing Price`) %>% 
+  rename(Date=Time)
+#Add year, month, day columns
+Eth<-Eth %>% 
+  mutate(Year=year(dmy(Date)), Month=month(dmy(Date)), Weekday=wday(dmy(Date)))
+#change date format
+#######
+#add log returns column
+Eth<-Eth %>% 
+  mutate(log_returns =log(eth_price/lag(eth_price)))
+#Show the extent of volatility by year
+Eth %>% 
+  group_by(Year) %>% 
+  summarise(sd(log_returns, na.rm=TRUE))
+#show sd of log returns whole lifetime
+Eth %>%
+  summarise(sd(log_returns, na.rm=TRUE)) 
+add_eth <- c("Total", 0.0640)
+
+#create table of results of volatility
+tab_eth<-Eth %>% 
+  group_by(Year) %>% 
+  summarise(format(round(sd(log_returns, na.rm=TRUE), digits=4) ,nsmall=4))
+#rename column in results table
+tab_eth<-tab_eth %>% 
+  rename("Ethereum" = `format(round(sd(log_returns, na.rm = TRUE), digits = 4), nsmall = 4)`)
+#combine table with the final lifetime value
+NEW_eth<-rbind(tab_eth,add_eth)
+#nicer format for table
+NEW_nice_tab_eth<-formattable(NEW_eth)
+#####################################################
+
+#Read in litecoin price daily data
+Lit <- read_csv("litecoin.csv")
+#Rename columns
+Lit <- Lit %>% 
+  rename(Lit_price =`LTC / USD Denominated Closing Price`) %>% 
+  rename(Date=Time)
+#Add year, month, day columns
+Lit<-Lit %>% 
+  mutate(Year=year(dmy(Date)), Month=month(dmy(Date)), Weekday=wday(dmy(Date)))
+#change date format
+Lit$Date <- as.Date(bcoin$Date, "%d/%m/%Y")
+#add log returns column
+Lit<-Lit %>% 
+  mutate(log_returns =log(Lit_price/lag(Lit_price)))
+#Show the extent of volatility by year
+Lit %>% 
+  group_by(Year) %>% 
+  summarise(sd(log_returns, na.rm=TRUE))
+#show sd of log returns whole lifetime
+Lit %>%
+  summarise(sd(log_returns, na.rm=TRUE)) 
+add_Lit <- c("Total", 0.0731)
+
+#create table of results of volatility
+tab_Lit<-Lit %>% 
+  group_by(Year) %>% 
+  summarise(format(round(sd(log_returns, na.rm=TRUE), digits=4) ,nsmall=4))
+#rename column in results table
+tab_Lit<-tab_Lit %>% 
+  rename("Litecoin" = `format(round(sd(log_returns, na.rm = TRUE), digits = 4), nsmall = 4)`)
+#combine table with the final lifetime value
+NEW_Lit<-rbind(tab_Lit,add_Lit)
+#nicer format for table
+NEW_nice_tab_Lit<-formattable(NEW_Lit)
+######################################################################
+#Read in bitcoin_cash price daily data
+Bcash <- read_csv("bitcoin_cash.csv")
+#Rename columns
+Bcash <- Bcash %>% 
+  rename(Bcash_price =`BCH / USD Denominated Closing Price`) %>% 
+  rename(Date=Time)
+#Add year, month, day columns
+Bcash<-Bcash %>% 
+  mutate(Year=year(ymd(Date)), Month=month(ymd(Date)), Weekday=wday(ymd(Date)))
+#change date format
+Bcash$Date <- as.Date(Bcash$Date, "%Y-%m-%d")
+#add log returns column
+Bcash<-Bcash %>% 
+  mutate(log_returns =log(Bcash_price/lag(Bcash_price)))
+#Show the extent of volatiBcashy by year
+Bcash %>% 
+  group_by(Year) %>% 
+  summarise(sd(log_returns, na.rm=TRUE))
+#show sd of log returns whole lifetime
+Bcash %>%
+  summarise(sd(log_returns, na.rm=TRUE)) 
+add_Bcash <- c("Total", 0.0725)
+
+#create table of results of volatiBcashy
+tab_Bcash<-Bcash %>% 
+  group_by(Year) %>% 
+  summarise(format(round(sd(log_returns, na.rm=TRUE), digits=4) ,nsmall=4))
+#rename column in results table
+tab_Bcash<-tab_Bcash %>% 
+  rename("Bitcoin Cash" = `format(round(sd(log_returns, na.rm = TRUE), digits = 4), nsmall = 4)`)
+#combine table with the final lifetime value
+NEW_Bcash<-rbind(tab_Bcash,add_Bcash)
+#nicer format for table
+NEW_nice_tab_Bcash<-formattable(NEW_Bcash)
+
+#####################################################
+
+#Read in dogecoin price daily data
+dog <- read_csv("dogecoin.csv")
+#Rename columns
+dog <- dog %>% 
+  rename(dog_price =`DOGE / USD Denominated Closing Price`) %>% 
+  rename(Date=Time)
+#Add year, month, day columns
+dog<-dog %>% 
+  mutate(Year=year(dmy(Date)), Month=month(dmy(Date)), Weekday=wday(dmy(Date)))
+#change date format
+dog$Date <- as.Date(bcoin$Date,"%Y-%m-%d")
+#add log returns column
+dog<-dog %>% 
+  mutate(log_returns =log(dog_price/lag(dog_price)))
+#Show the extent of volatidogy by year
+dog %>% 
+  group_by(Year) %>% 
+  summarise(sd(log_returns, na.rm=TRUE))
+#show sd of log returns whole lifetime
+dog %>%
+  summarise(sd(log_returns, na.rm=TRUE)) 
+add_dog <- c("Total", 0.0730)
+
+#create table of results of volatidogy
+tab_dog<-dog %>% 
+  group_by(Year) %>% 
+  summarise(format(round(sd(log_returns, na.rm=TRUE), digits=4) ,nsmall=4))
+#rename column in results table
+tab_dog<-tab_dog %>% 
+  rename("Dogecoin" = `format(round(sd(log_returns, na.rm = TRUE), digits = 4), nsmall = 4)`)
+#combine table with the final lifetime value
+NEW_dog<-rbind(tab_dog,add_dog)
+#nicer format for table
+NEW_nice_tab_dog<-formattable(NEW_dog)
+######################################################################
+
+NEW_nice_tab_bc
+NEW_nice_tab_Bcash
+NEW_nice_tab_Lit
+NEW_nice_tab_dog
+NEW_nice_tab_eth
+
+My_tab<-
+library(dplyr)  
+NEW_nice_tab_bc %>% 
+  full_join(NEW_nice_tab_eth, by="Year") %>% 
+  full_join(NEW_nice_tab_Bcash, by="Year") %>% 
+  full_join(NEW_nice_tab_Lit, by="Year") %>%
+  full_join(NEW_nice_tab_dog, by="Year")  %>%
+  tab_header(
+    title = md("Data listing from **gtcars**"))
+
+?tab_header
+formattable(My_tab, title="sos")
+
+My_tab<-NEW_bc %>% 
+  full_join(NEW_SP, by="Year") %>% 
+  full_join(NEW_Lit, by="Year") %>% 
+  full_join(NEW_dog, by="Year") %>% 
+  full_join(NEW_eth, by="Year") %>% 
+  full_join(NEW_Bcash, by="Year")
+
+
+longBub_1 <- bcoin %>%
+  filter(Date>"2012-05-28" & Date<"2013-04-16" ) %>% 
+  ggplot(aes(x=Date, y=BTC_price)) + 
+  geom_line(colour="blue") +
+  labs(title="Bitcoin long bubble 1",
+       subtitle="Bubble length: 323 days - May 2012 to April 2013",
+       x="Month",
+       y="Bitcoin price in $") + 
+  theme(axis.text.x=element_text(size=10),
+        axis.text.y=element_text(size=10))
+
+
+longBub_2 <- bcoin %>%
+  filter(Date>"2013-07-03" & Date<"2015-01-14" ) %>% 
+  ggplot(aes(x=Date, y=BTC_price)) + 
+  geom_line(colour="blue") +
+  labs(title="Bitcoin long bubble 2",
+       subtitle="Bubble length: 560 days - July 2013 to Dec 2013",
+       x="Month",
+       y="Bitcoin price in $")+ 
+  theme(axis.text.x=element_text(size=10),
+        axis.text.y=element_text(size=10))
+
+
+longBub_3 <- bcoin %>%
+  filter(Date>"2016-01-15" & Date<"2017-12-31" ) %>% 
+  ggplot(aes(x=Date, y=BTC_price)) + 
+  geom_line(colour="blue") +
+  labs(title="Bitcoin long bubble 3",
+       subtitle="Bubble length: 710 days - Jan 2016 to Dec 2017",
+       x="Month",
+       y="Bitcoin price in $")+ 
+  theme(axis.text.x=element_text(size=10),
+        axis.text.y=element_text(size=10))
+
+longBub_1+longBub_2+longBub_3
